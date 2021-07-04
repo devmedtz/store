@@ -1,0 +1,28 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} Home {% endblock title %}
+
+{% block stylesheet %}{% endblock stylesheet %}
+
+{% block content %} 
+    <div class="row mt-3">
+        {% for product in products %}
+        <div class="col-lg-4">
+            <img class="thumbnail" src="{{product.image.url}}">
+            <div class="box-element product">
+                <h6><strong>{{product.name}}</strong></h6>
+                <hr>
+
+                <button data-product="{{product.id}}" data-action="add"  class="update-cart btn btn-outline-secondary add-btn">Add to Cart</button>
+                <a class="btn btn-outline-success" href="#">View</a>
+                <h5 style="display: inline-block; float: right"><strong>Tshs. {{product.price|intcomma}}</strong></h5>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascript %}{% endblock javascript %}

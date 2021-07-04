@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store | {% block title %}{% endblock title %}</title>
+
+    <!-- Bootstrap 5 css -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <!-- FontAwesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- custom stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- specific page stylesheet -->
+    {% block stylesheet %}{% endblock stylesheet %}
+
+    <script type="text/javascript">
+      var user = '{{request.user}}'
+
+      // Genereate token (Django Docummentation copy/paste)
+      function getToken(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+      }
+      var csrftoken = getToken('csrftoken');
+      // End of function to generate token
+
+      function getCookie(name) {
+		    // Split cookie string and get all individual name=value pairs in an array
+		    var cookieArr = document.cookie.split(";");
+
+		    // Loop through the array elements
+		    for(var i = 0; i < cookieArr.length; i++) {
+		        var cookiePair = cookieArr[i].split("=");
+
+		        /* Removing whitespace at the beginning of the cookie name
+		        and compare it with the given string */
+		        if(name == cookiePair[0].trim()) {
+		            // Decode the cookie value and return
+		            return decodeURIComponent(cookiePair[1]);
+		        }
+		    }
+
+		    // Return null if not found
+		    return null;
+		  }
+
+      var cart = JSON.parse(getCookie('cart'))
+
+      if (cart == undefined){
+        cart = {}
+        console.log('Cart Created!', cart)
+        document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+      }
+      console.log('Cart:', cart)
+
+    </script>
+
+    
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="#">Store</a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+            </ul>
+            <div class="form-inline my-2 my-lg-0">
+                <a href="{% url 'cart' %}" class="cart position-relative d-inline-flex me-3" aria-label="View your shopping cart">
+                    <i class="fas fa fa-shopping-cart fa-lg"></i>
+                    <span id="cart-total" class="cart-basket d-flex align-items-center justify-content-center">
+                      {{cartItems}}
+                    </span>
+                  </a>
+                
+                {% if user.is_authenticated %}
+                <a class="btn btn-secondary" type="submit">logout</a>
+                {% else %}
+                <a class="btn btn-outline-success me-2" type="submit">Login</a>
+                <a class="btn btn-success me-2" type="submit">Signup</a>
+                {% endif %}
+           </div>
+          </div>
+        </div>
+      </nav>
+
+    <div class="container" style="margin-bottom: 80px;">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- JQUERY -->
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <!-- BOOTSTRAP JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Add to cart item javascript -->
+    <script src="{% static 'js/cart.js' %}"></script>
+
+    <!-- specific pages javascripts -->
+    {% block javascript %}{% endblock javascript %}
+</body>
+</html>
